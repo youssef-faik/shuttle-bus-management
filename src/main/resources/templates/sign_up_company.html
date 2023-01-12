@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"
+      layout:decorate="~{layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org/">
+<head>
+  <title>S'inscrire</title>
+  <script src="/webjars/bootstrap/5.2.3/js/bootstrap.js"></script>
+</head>
+<body>
+<div layout:fragment="main_content">
+  <div class="row mb-4">
+    <div class="col"></div>
+    <div class="col">
+      <div class="alert alert-danger" th:if="${param.error}">E-mail et mot de passe invalides.</div>
+      <div class="card" style="width: 30rem;">
+        <div class="card-header h2 text-center">S'inscrire</div>
+        <!-- start card-body-->
+        <div class="card-body">
+          <div class="btn-group text-center w-100 mb-2">
+            <a class="btn btn-outline-secondary" th:href="@{/sign_up}">
+              <svg class="bi bi-person-circle" fill="currentColor" height="16" viewBox="0 0 16 16"
+                   width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+                      fill-rule="evenodd"/>
+              </svg>
+              &nbsp;Je suis un client</a>
+            <a class="btn btn-secondary" th:href="@{/sign_up_company}">
+              <svg class="bi bi-bus-front-fill" fill="currentColor" height="16" viewBox="0 0 16 16"
+                   width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 7a1 1 0 0 1-1 1v3.5c0 .818-.393 1.544-1 2v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V14H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2a2.496 2.496 0 0 1-1-2V8a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1V2.64C1 1.452 1.845.408 3.064.268A43.608 43.608 0 0 1 8 0c2.1 0 3.792.136 4.936.268C14.155.408 15 1.452 15 2.64V4a1 1 0 0 1 1 1v2ZM3.552 3.22A43.306 43.306 0 0 1 8 3c1.837 0 3.353.107 4.448.22a.5.5 0 0 0 .104-.994A44.304 44.304 0 0 0 8 2c-1.876 0-3.426.109-4.552.226a.5.5 0 1 0 .104.994ZM8 4c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9c1.876 0 3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44.304 44.304 0 0 0 8 4Zm-3 7a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm8 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm-7 0a1 1 0 0 0 1 1h2a1 1 0 1 0 0-2H7a1 1 0 0 0-1 1Z"/>
+              </svg>
+              &nbsp;Je suis une société</a>
+          </div>
+          <form method="post" th:action="@{/new_company}">
+            <div class="mb-3">
+              <label class="form-label" for="company_name">Nom société</label>
+              <input class="form-control" id="company_name" th:field="${company.name}" type="text">
+              <div class="text-danger" th:errors="${company.name}"></div>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label" for="company_email">Email</label>
+              <input class="form-control" id="company_email" th:field="${company.email}" type="email">
+              <div class="text-danger" th:errors="${company.email}"></div>
+            
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label" for="company_password">Mot de passe</label>
+              <input class="form-control" id="company_password" th:field="${company.password}" type="password">
+              <div class="text-danger" th:errors="${company.password}"></div>
+            </div>
+            <div class="text-center d-grid col-6 mx-auto mt-4">
+              <button class="btn btn-primary" type="submit">S'inscrire</button>
+            </div>
+          </form>
+        </div>
+        <!-- end card-body-->
+        <div class="card-footer">
+          <p class="text-center">
+            Vous avez déjà un compte? <a class="link-primary" th:href="@{/login}">connectez-vous maintenant.</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
+</body>
+</html>

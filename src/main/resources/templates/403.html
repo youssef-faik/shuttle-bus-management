@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+  <head>
+    <title>Accès interdit !</title>
+  </head>
+  <body>
+    <div layout:fragment="main_content">
+      <div class="row  mt-3">
+        <div class="col-10 offset-1">
+          <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Accès interdit !</h4>
+            <p class="mb-0">vous ne disposez pas les autorisations requises pour accéder à cette page.</p>
+            <hr>
+            <a th:href="@{/}" class="alert-link">Cliquez-ici pour revenir à la page d'accueil</a>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

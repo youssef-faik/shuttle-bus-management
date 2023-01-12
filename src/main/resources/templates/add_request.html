@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <title>Ajouter Demande d'Abonnement</title>
+</head>
+<body>
+  <div layout:fragment="main_content">
+    <div class="row">
+      <div class="col-10 offset-1">
+        <div class="card">
+          <div class="card-header h3">Ajouter Demande d'Abonnement</div>
+            <div class="card-body">
+              <form th:action="@{/client/save_request}" method="post">
+                <div class="row">
+                  <!--col 1-->
+                  <div class="col-4">
+                    <!--start select ville depart-->
+                    <div class="mb-3">
+                      <label for="ville-depart" class="form-label">Ville de départ</label>
+                      <select id="ville-depart" class="form-select" th:field="${request.departureCity}">
+                        <option value="" hidden >Choisissez la Ville de départ</option>
+                        <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
+                      </select>
+                    </div>
+                    <!--end select ville depart-->
+                    
+                    <!--start select ville arrivée-->
+                    <div class="mb-3">
+                      <label for="ville-arrive" class="form-label">Ville d'arrivée</label>
+                      <select id="ville-arrive" class="form-select" th:field="${request.arrivalCity}">
+                        <option value="" hidden >Choisissez la Ville d'arrivée</option>
+                        <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <!--col 2-->
+                  <div class="col-4">
+                    <!--start date debut-->
+                    <div class="mb-3">
+                      <label class="form-label" for="date_debut">Date début</label>
+                      <input type="date" class="form-control" id="date_debut" required th:field="${request.startDate}">
+                    </div>
+                    <!--end date debut-->
+                    
+                    <!--start date fin-->
+                    <div class="mb-3">
+                      <label class="form-label" for="date_fin">Date fin</label>
+                      <input type="date" class="form-control" id="date_fin" required th:field="${request.endDate}">
+                    </div>
+                    <!--end date fin-->
+                  </div>
+                  
+                  <!--col 3-->
+                  <div class="col-4">
+                      <!--start heure depart-->
+                      <div class="mb-3">
+                        <label class="form-label" for="heure_depart">Heure départ</label>
+                        <input type="time" class="form-control" id="heure_depart" required th:field="${request.departureHour}">
+                      </div>
+                      <!--end heure debut-->
+                      
+                      <!--start heure d'arrivée-->
+                      <div class="mb-3">
+                        <label class="form-label" for="heure_arrivee">Heure d'arrivée</label>
+                        <input type="time" class="form-control" id="heure_arrivee" required th:field="${request.arrivalHour}">
+                      </div>
+                      <!--end heure d'arrivée-->
+                    </div>
+                </div>
+                
+                <!--btn ajouter-->
+                <div class="text-center d-grid col-4 mx-auto mt-4">
+                  <button type="submit" class="btn btn-primary">Ajouter demande</button>
+                </div>
+              </form>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</body>
+</html>

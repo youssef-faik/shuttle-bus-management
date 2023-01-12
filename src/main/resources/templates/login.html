@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+<title>Page d'authentification</title>
+</head>
+<body>
+  <div layout:fragment="main_content">
+    <div class="row mb-4">
+      <div class="col"></div>
+      <div class="col">
+        <div class="card" style="width: 30rem;">
+          <div class="card-header h2 text-center">Se connecter</div>
+          <div class="card-body">
+            
+            <div class="alert alert-danger" th:if="${param.error}">E-mail et mot de passe invalides.</div>
+            <div class="alert alert-success"  th:if="${param.logout}">Vous avez été déconnecté.</div>
+        
+            <form th:action="@{/login}" method="post" >
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input   type="email" class="form-control" id="email" th:field="${user.email}">
+                <span th:errors="${user.email}"></span>
+              </div>
+        
+              <div class="mb-3">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input   type="password" class="form-control" id="password" th:field="${user.password}">
+                <span th:errors="${user.password}"></span>
+              </div>
+        
+              <div class="text-center d-grid col-6 mx-auto mt-4">
+                <button type="submit" class="btn btn-primary ">Se connecter</button>
+              </div>
+            </form>
+          </div>
+          <div class="card-footer">
+            <p class="text-center">
+              Vous n'avez pas de compte ? <a th:href="@{/sign_up}" class="link-primary">Créez-en un maintenant.</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col"></div>
+
+    </div>
+  </div>
+</body>
+</html>
+
+

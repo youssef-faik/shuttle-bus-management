@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <title>Demandes d'abonnements</title>
+</head>
+<body>
+<div layout:fragment="main_content">
+  <div class="row">
+    <div class="col-10 offset-1">
+      <div class="card">
+        <div class="card-header h3">Demandes d'abonnements</div>
+        <div class="card-body">
+          <div th:if="${#lists.isEmpty(requests)}">
+            <p class="card-text" role="alert">Aucune demandes abonnement n'est disponible pour le moment !</p>
+          </div>
+          <div th:unless="${#lists.isEmpty(requests)}" >
+            <div class="table-responsive rounded">
+            <table class="table table-bordered table-sm table-hover table-striped ">
+              <thead class="table-dark">
+              <tr>
+                <th scope="col">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                  <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+                  </svg>
+                  # Demandeurs
+                </th>
+                <th scope="col">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
+                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                  </svg>
+                  Ville départ</th>
+                <th scope="col">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
+                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                  </svg>
+                  Ville arrivé</th>
+                <th scope="col">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-date" viewBox="0 0 16 16">
+                    <path d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"/>
+                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                  </svg>
+                  Date début</th>
+                <th scope="col">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-date" viewBox="0 0 16 16">
+                    <path d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"/>
+                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                  </svg>
+                  Date fin</th>
+                <th scope="col">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                  </svg>
+                  Heure Départ</th>
+                <th scope="col">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                  </svg>
+                  Heure arrivé</th>
+                <th scope="col"></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="request : ${requests}" >
+                <td th:text="${request.requestingClients.size()}"></td>
+                <td th:text="${request.departureCity.name}"></td>
+                <td th:text="${request.arrivalCity.name}"></td>
+                <td th:text="${#dates.format(request.startDate, 'E, MMM dd yyyy')}"></td>
+                <td th:text="${#dates.format(request.endDate, 'E, MMM dd yyyy')}"></td>
+                <td th:text="${#dates.format(request.departureHour, 'HH:mm')}"></td>
+                <td th:text="${#dates.format(request.arrivalHour, 'HH:mm')}"></td>
+                <td>
+                  <!-- Link trigger modal -->
+                  <a class="btn btn-success " data-bs-toggle="modal" th:data-bs-target="${'#requestModal' + request.id}">Prendre en charge</a>
+  
+                  <!-- Modal -->
+                  <div class="modal fade" th:id="${'requestModal' + request.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5 " >Saisir les informations de l'Offre</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-title="Fermer"></button>
+                        </div>
+        
+                        <form th:action="@{'/company/take_up_offer/' + ${request.id}}" method="post">
+                        <!--start modal-body-->
+                          <div class="modal-body">
+                            <div class="row g-0">
+                              <div class="mb-3">
+                                <label class="form-label" for="number_additional_people">Nombre abonné à ajouter sur le nombre existant</label>
+                                <div class="input-group">
+                                  <input type="number" class="form-control" id="number_additional_people" name="number_additional_people" value="0" min="0" required>
+                                  <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                                      <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+                                    </svg>
+                                  </span>
+                                </div>
+                              </div>
+                              
+                              <div class="mb-3">
+                                <label class="form-label" for="price">Prix</label>
+                                <div class="input-group mb-3">
+                                  <input type="number" class="form-control" id="price" name="price" required>
+                                  <span class="input-group-text">DH</span>
+                                </div>
+                              </div>
+  
+                              <div class="mb-3 d-grid">
+                                  <label for="bus_description" class="form-label">Description de l'autobus</label>
+                                  <textarea class="form-control" id="bus_description" name="bus_description" rows="3" required></textarea>
+                              </div>
+                              
+                            </div>
+                          </div>
+    
+                          <div class="modal-footer">
+                            <div class="text-center d-grid col-6 mx-auto mt-4">
+                              <button type="submit" class="btn btn-success">Ajouter offre</button>
+                            </div>
+                          </div>
+                        </form>
+
+                      </div>
+                    </div>
+                  </div>
+  
+  
+                </td>
+              
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+</div>
+</body>
+</html>
