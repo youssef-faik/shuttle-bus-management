@@ -17,7 +17,7 @@
             <div th:if="${#lists.isEmpty(offers)}">
               <p class="card-text" role="alert">
                 Vous n'avez pas encore créé une offre,
-                <a th:href="@{/company/add_subscription}" class="link-primary">créez-en une maintenant.</a>
+                <a th:href="@{/company/add_offer}" class="link-primary">créez-en une maintenant.</a>
               </p>
             </div>
             <div th:unless="${#lists.isEmpty(offers)}" >

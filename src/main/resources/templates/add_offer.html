@@ -13,14 +13,23 @@
           <div class="card">
             <div class="card-header h3">Ajouter une offre d'abonnement</div>
               <div class="card-body">
-                <form th:action="@{/company/save_offer}" method="post">
+                <form th:action="@{/company/save_offer}" method="post" th:object="${offer}">
+                  <div class="row">
+                    <div class="alert alert-danger"  th:if="${#fields.hasErrors('global')}">
+                      <h4 class="alert-heading fw-bold">Erreurs !</h4>
+                      <hr>
+                      <ul>
+                        <li th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error"></li>
+                      </ul>
+                    </div>
+                  </div>
                   <div class="row">
                   <!--col 1-->
                   <div class="col">
                     <!--start select ville depart-->
                     <div class="mb-3">
                       <label for="ville-depart" class="form-label">Ville de départ</label>
-                      <select id="ville-depart" class="form-select" th:field="${offer.departureCity}">
+                      <select required id="ville-depart" class="form-select" th:field="${offer.departureCity}">
                         <option value="" hidden >Choisissez la Ville de départ</option>
                         <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
                       </select>
@@ -30,7 +39,7 @@
                     <!--start select ville arrivée-->
                     <div class="mb-3">
                       <label for="ville-arrive" class="form-label">Ville d'arrivée</label>
-                      <select id="ville-arrive" class="form-select" th:field="${offer.arrivalCity}">
+                      <select required id="ville-arrive" class="form-select" th:field="${offer.arrivalCity}">
                         <option value="" hidden >Choisissez la Ville d'arrivée</option>
                         <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
                       </select>
@@ -80,6 +89,7 @@
                           <input type="text" class="form-control" id="prix" th:field="${offer.price}">
                           <span class="input-group-text">DH</span>
                         </div>
+                        <div class="text-danger" th:errors="${offer.price}"></div>
                       </div>
                     </div>
                     
@@ -122,6 +132,7 @@
                 <div class="text-center d-grid col-4 mx-auto mt-4">
                   <button type="submit" class="btn btn-primary">Ajouter offre</button>
                 </div>
+                
               </form>
             </div>
           </div>

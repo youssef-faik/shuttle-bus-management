@@ -9,12 +9,16 @@ import com.example.gestion_navette_v1.repositories.IRequestRepository;
 import com.example.gestion_navette_v1.security.CustomUserDetails;
 import com.example.gestion_navette_v1.security.IAuthenticationFacade;
 import com.example.gestion_navette_v1.security.services.AppUserService;
+import com.example.gestion_navette_v1.services.ValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/company/")
@@ -24,8 +28,8 @@ public class CompanyController {
   final ICityRepository cityRepository;
   final IOfferRepository offerRepository;
   final IRequestRepository requestRepository;
-  
   final IAuthenticationFacade authenticationFacade;
+  final ValidationService validationService;
   
   
   @GetMapping("/my_offers")
@@ -38,14 +42,14 @@ public class CompanyController {
   }
   
   @GetMapping("/subscription_requests")
-  public String getSubscriptionRequests(Model model){
+  public String getSubscriptionRequests(Model model) {
     model.addAttribute("requests", requestRepository.findByOpenTrue());
-  
+    
     return "subscription_requests";
   }
   
-  @GetMapping("/add_subscription")
-  public String addSubscription(Model model){
+  @GetMapping("/add_offer")
+  public String addOffer(Model model) {
     model.addAttribute("cities", cityRepository.findAll());
     model.addAttribute("offer", new Offer());
     
@@ -53,7 +57,21 @@ public class CompanyController {
   }
   
   @PostMapping("/save_offer")
-  public String saveOffer(Offer offer){
+  public String saveOffer(@Valid Offer offer, Model model, BindingResult result) {
+    List<ObjectError> errors = validationService.validateOffer(offer);
+    
+    if (!errors.isEmpty()) {
+      for (ObjectError error : errors) {
+        result.addError(error);
+      }
+    }
+    
+    if (result.hasErrors()) {
+        model.addAttribute("cities", cityRepository.findAll());
+        
+        return "/add_offer";
+    }
+  
     CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
     offer.setOfferingCompany((Company) appUserService.getUserByEmail(userDetails.getUsername()));
     offerRepository.save(offer);
