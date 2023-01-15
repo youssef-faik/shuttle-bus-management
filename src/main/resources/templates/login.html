@@ -15,7 +15,7 @@
           <div class="card-header h2 text-center">Se connecter</div>
           <div class="card-body">
             
-            <div class="alert alert-danger" th:if="${param.error}">E-mail et mot de passe invalides.</div>
+            <div class="alert alert-danger" th:if="${param.error}">E-mail ou mot de passe invalides.</div>
             <div class="alert alert-success"  th:if="${param.logout}">Vous avez été déconnecté.</div>
         
             <form th:action="@{/login}" method="post" >
