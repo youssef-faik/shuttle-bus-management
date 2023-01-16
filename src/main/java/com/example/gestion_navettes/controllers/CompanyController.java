@@ -46,8 +46,11 @@ public class CompanyController {
   
   @GetMapping("/add_offer")
   public String addOffer(Model model) {
+    Offer offer = new Offer();
+    offer.setOfferingCompany((Company) authenticationFacade.getCurrentAuthenticatedUser());
+  
+    model.addAttribute("offer", offer);
     model.addAttribute("cities", cityRepository.findAll());
-    model.addAttribute("offer", new Offer());
     
     return "add_offer";
   }
@@ -68,7 +71,6 @@ public class CompanyController {
       return "/add_offer";
     }
     
-    offer.setOfferingCompany((Company) authenticationFacade.getCurrentAuthenticatedUser());
     offerRepository.save(offer);
     
     return "redirect:/company/my_offers";

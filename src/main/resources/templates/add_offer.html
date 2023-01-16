@@ -15,6 +15,7 @@
         <div class="card-body">
           <form method="post" th:action="@{/company/save_offer}" th:object="${offer}">
             <div class="row">
+              <input type="hidden" th:field="${offer.offeringCompany.id}">
               <div class="alert alert-danger" th:if="${#fields.hasErrors('global')}">
                 <h4 class="alert-heading fw-bold">Erreurs !</h4>
                 <hr>
