@@ -10,13 +10,19 @@ import com.example.gestion_navette_v1.security.CustomUserDetails;
 import com.example.gestion_navette_v1.security.IAuthenticationFacade;
 import com.example.gestion_navette_v1.security.repositories.IAppUserRepository;
 import com.example.gestion_navette_v1.security.services.AppUserService;
+import com.example.gestion_navette_v1.services.ValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/client/")
@@ -28,6 +34,73 @@ public class ClientController {
   final IOfferRepository offerRepository;
   final IRequestRepository requestRepository;
   final IAppUserRepository appUserRepository;
+  final ValidationService validationService;
+  
+  @GetMapping("/my_subscriptions")
+  public String getMySubscriptions(Model model){
+    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
+    Client client = (Client) appUserService.getUserByEmail(userDetails.getUsername());
+    
+    model.addAttribute("subscriptions", offerRepository.findByClientsIs(client));
+  
+    return "my_subscriptions";
+  }
+  
+  @GetMapping("/my_requests")
+  public String getMyRequests(Model model){
+    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
+    Client client = (Client) appUserService.getUserByEmail(userDetails.getUsername());
+    model.addAttribute("requests", requestRepository.findByRequestingClientsEquals(client));
+    model.addAttribute("offers", offerRepository.findAll());
+    
+    return "my_requests";
+  }
+  
+  @GetMapping("/add_request")
+  public String addSubscriptionRequest(Model model){
+    model.addAttribute("cities", cityRepository.findAll());
+    model.addAttribute("request", new Request());
+    
+    return "add_request";
+  }
+  
+  @PostMapping("/save_request")
+  public String saveOffer(@Valid Request request, BindingResult result, Model model){
+    List<ObjectError> errors = validationService.validateRequest(request);
+  
+    if (!errors.isEmpty()) {
+      for (ObjectError error : errors) {
+        result.addError(error);
+      }
+    }
+  
+    if (result.hasErrors()) {
+      model.addAttribute("cities", cityRepository.findAll());
+    
+      return "/add_request";
+    }
+    
+    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
+    Client client = (Client) appUserService.getUserByEmail(userDetails.getUsername());
+    
+    Request matchingRequest = requestRepository.findByDepartureCityAndArrivalCity(
+            request.getDepartureCity(),
+            request.getArrivalCity());
+    
+    if (matchingRequest != null) {
+      if (!matchingRequest.getRequestingClients().contains(client)) {
+        matchingRequest.getRequestingClients().add(client);
+        requestRepository.save(matchingRequest);
+      }
+      return "redirect:/client/my_requests";
+    }
+    
+    request.getRequestingClients().add((client));
+    request.setOpen(true);
+    requestRepository.save(request);
+    
+    return "redirect:/client/my_requests";
+  }
   
   @PostMapping("/subscribe/{id}")
   public String subscribe(@PathVariable("id") Long offerId){
@@ -45,54 +118,5 @@ public class ClientController {
     return "redirect:/client/my_subscriptions";
   }
   
-  @GetMapping("/my_subscriptions")
-  public String getMySubscriptions(Model model){
-    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-    Client client = (Client) appUserService.getUserByEmail(userDetails.getUsername());
-    
-    model.addAttribute("subscriptions", offerRepository.findByClientsIs(client));
-  
-    return "my_subscriptions";
-  }
-  
-  @GetMapping("/add_request")
-  public String addSubscriptionRequest(Model model){
-    model.addAttribute("cities", cityRepository.findAll());
-    model.addAttribute("request", new Request());
-    
-    return "add_request";
-  }
-  
-  @GetMapping("/my_requests")
-  public String getMyRequests(Model model){
-    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-    Client client = (Client) appUserService.getUserByEmail(userDetails.getUsername());
-    model.addAttribute("requests", requestRepository.findByRequestingClientsEquals(client));
-    model.addAttribute("offers", offerRepository.findAll());
-  
-    return "my_requests";
-  }
-  
-  @PostMapping("/save_request")
-  public String saveOffer(Request request){
-    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-    Client client = (Client) appUserService.getUserByEmail(userDetails.getUsername());
-  
-    Request matchingRequest = requestRepository.findByDepartureCityAndArrivalCity(request.getDepartureCity(), request.getArrivalCity());
-  
-    if (matchingRequest != null) {
-      if (!matchingRequest.getRequestingClients().contains(client)) {
-        matchingRequest.getRequestingClients().add(client);
-        requestRepository.save(matchingRequest);
-      }
-      return "redirect:/client/my_requests";
-    }
-  
-    request.getRequestingClients().add((client));
-    request.setOpen(true);
-    requestRepository.save(request);
-    
-    return "redirect:/client/my_requests";
-  }
-  
+ 
 }

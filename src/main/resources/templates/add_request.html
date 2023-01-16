@@ -13,14 +13,21 @@
         <div class="card">
           <div class="card-header h3">Ajouter Demande d'Abonnement</div>
             <div class="card-body">
-              <form th:action="@{/client/save_request}" method="post">
+              <form th:action="@{/client/save_request}" method="post" th:object="${request}">
                 <div class="row">
+                  <div class="alert alert-danger" th:if="${#fields.hasErrors('global')}">
+                    <h4 class="alert-heading fw-bold">Erreurs !</h4>
+                    <hr>
+                    <ul>
+                      <li class="error" th:each="err : ${#fields.errors('global')}" th:text="${err}"></li>
+                    </ul>
+                  </div>
                   <!--col 1-->
                   <div class="col-4">
                     <!--start select ville depart-->
                     <div class="mb-3">
                       <label for="ville-depart" class="form-label">Ville de départ</label>
-                      <select id="ville-depart" class="form-select" th:field="${request.departureCity}">
+                      <select required id="ville-depart" class="form-select" th:field="${request.departureCity}">
                         <option value="" hidden >Choisissez la Ville de départ</option>
                         <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
                       </select>
@@ -30,7 +37,7 @@
                     <!--start select ville arrivée-->
                     <div class="mb-3">
                       <label for="ville-arrive" class="form-label">Ville d'arrivée</label>
-                      <select id="ville-arrive" class="form-select" th:field="${request.arrivalCity}">
+                      <select required id="ville-arrive" class="form-select" th:field="${request.arrivalCity}">
                         <option value="" hidden >Choisissez la Ville d'arrivée</option>
                         <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
                       </select>

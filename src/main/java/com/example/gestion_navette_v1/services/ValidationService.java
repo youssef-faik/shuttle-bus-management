@@ -1,6 +1,7 @@
 package com.example.gestion_navette_v1.services;
 
 import com.example.gestion_navette_v1.entities.Offer;
+import com.example.gestion_navette_v1.entities.Request;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.ObjectError;
 
@@ -69,6 +70,46 @@ public class ValidationService {
               "La description de l'autobus doit être entre 30 et 2000 caractères !"));
     }
     
+    return errors;
+  }
+  
+  public List<ObjectError> validateRequest(Request request) {
+    List<ObjectError> errors = new ArrayList<>();
+    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+    
+    LocalDate today = LocalDate.parse(dateFormatter.format(new Date()));
+    LocalDate startDate = LocalDate.parse(dateFormatter.format(request.getStartDate()));
+    LocalDate endDate = LocalDate.parse(dateFormatter.format(request.getEndDate()));
+    
+    Duration duration = Duration.between(
+            request.getDepartureHour().toInstant(),
+            request.getArrivalHour().toInstant());
+    
+    
+    if (request.getDepartureCity().getId() == request.getArrivalCity().getId()) {
+      errors.add(new ObjectError(
+              "city",
+              "La ville d'arrivée doit être différente de la ville d'arrivée"));
+    }
+    
+    if (startDate.isBefore(today)) {
+      errors.add(new ObjectError(
+              "start-date",
+              "La date de début doit être supérieure ou égale à la date d'aujourd'hui"));
+    }
+    
+    if (endDate.isBefore(startDate)) {
+      errors.add(new ObjectError(
+              "end-date",
+              "La date de fin doit être supérieure à la date de début"));
+    }
+    
+    if (duration.toMinutes() < 15) {
+      errors.add(new ObjectError(
+              "arrivale-hour",
+              "la durée minimale d'un voyage est de 15 min"));
+    }
+
     return errors;
   }
   
