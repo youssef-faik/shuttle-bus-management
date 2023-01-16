@@ -8,7 +8,6 @@ import com.example.gestion_navettes.repositories.IOfferRepository;
 import com.example.gestion_navettes.repositories.IRequestRepository;
 import com.example.gestion_navettes.security.IAuthenticationFacade;
 import com.example.gestion_navettes.security.repositories.IAppUserRepository;
-import com.example.gestion_navettes.security.services.AppUserService;
 import com.example.gestion_navettes.services.ValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -27,7 +26,6 @@ import java.util.List;
 @RequestMapping("/client/")
 @RequiredArgsConstructor
 public class ClientController {
-  final AppUserService appUserService;
   final ICityRepository cityRepository;
   final IAuthenticationFacade authenticationFacade;
   final IOfferRepository offerRepository;

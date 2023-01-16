@@ -7,7 +7,6 @@ import com.example.gestion_navettes.repositories.ICityRepository;
 import com.example.gestion_navettes.repositories.IOfferRepository;
 import com.example.gestion_navettes.repositories.IRequestRepository;
 import com.example.gestion_navettes.security.IAuthenticationFacade;
-import com.example.gestion_navettes.security.services.AppUserService;
 import com.example.gestion_navettes.services.ValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,6 @@ import java.util.List;
 @RequestMapping("/company/")
 @RequiredArgsConstructor
 public class CompanyController {
-  final AppUserService appUserService;
   final ICityRepository cityRepository;
   final IOfferRepository offerRepository;
   final IRequestRepository requestRepository;

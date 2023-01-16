@@ -9,7 +9,6 @@ import com.example.gestion_navettes.security.IAuthenticationFacade;
 import com.example.gestion_navettes.security.entities.AppUser;
 import com.example.gestion_navettes.security.repositories.IAppRoleRepository;
 import com.example.gestion_navettes.security.repositories.IAppUserRepository;
-import com.example.gestion_navettes.security.services.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +26,6 @@ public class MainController {
   final IAppUserRepository appUserRepository;
   final IAppRoleRepository appRoleRepository;
   final IAuthenticationFacade authenticationFacade;
-  final AppUserService appUserService;
   
   
   @GetMapping({"/", "index"})
