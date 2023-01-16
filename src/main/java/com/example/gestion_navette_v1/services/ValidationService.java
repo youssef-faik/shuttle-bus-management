@@ -51,6 +51,24 @@ public class ValidationService {
               "la durée minimale d'un voyage est de 15 min"));
     }
     
+    if (offer.getPrice() < 50 || offer.getPrice() > 1000) {
+      errors.add(new ObjectError(
+              "offer-prix",
+              "Le prix d'une abonnement doit être entre 50 et 1000 dirhams !"));
+    }
+    
+    if (offer.getDesiredNumberOfSubscribers() < 1 || offer.getDesiredNumberOfSubscribers() > 100) {
+      errors.add(new ObjectError(
+              "nombre-desire-abonnees",
+              "Le nombre d'abonnées doit être entre 1 et 100 !"));
+    }
+    
+    if (offer.getBusDescription().length() < 30 || offer.getBusDescription().length() > 2000) {
+      errors.add(new ObjectError(
+              "description-bus",
+              "La description de l'autobus doit être entre 30 et 2000 caractères !"));
+    }
+    
     return errors;
   }
   

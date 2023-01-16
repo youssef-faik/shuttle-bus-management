@@ -33,11 +33,11 @@ public class CompanyController {
   
   
   @GetMapping("/my_offers")
-  public String getMyOffers(Model model){
+  public String getMyOffers(Model model) {
     CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
     Company company = (Company) appUserService.getUserByEmail(userDetails.getUsername());
     model.addAttribute("offers", offerRepository.findByOfferingCompany(company));
-  
+    
     return "my_offers";
   }
   
@@ -57,7 +57,7 @@ public class CompanyController {
   }
   
   @PostMapping("/save_offer")
-  public String saveOffer(@Valid Offer offer, Model model, BindingResult result) {
+  public String saveOffer(@Valid Offer offer, BindingResult result, Model model) {
     List<ObjectError> errors = validationService.validateOffer(offer);
     
     if (!errors.isEmpty()) {
@@ -67,11 +67,11 @@ public class CompanyController {
     }
     
     if (result.hasErrors()) {
-        model.addAttribute("cities", cityRepository.findAll());
-        
-        return "/add_offer";
+      model.addAttribute("cities", cityRepository.findAll());
+      
+      return "/add_offer";
     }
-  
+    
     CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
     offer.setOfferingCompany((Company) appUserService.getUserByEmail(userDetails.getUsername()));
     offerRepository.save(offer);
@@ -84,40 +84,46 @@ public class CompanyController {
                             @RequestParam(name = "price") float price,
                             @RequestParam(name = "number_additional_people") int numberOfAdditionalPeople,
                             @RequestParam(name = "bus_description") String busDescription
-  ){
+  ) {
     Request request = requestRepository.findById(requestId).get();
     
-    if (request != null && request.isOpen()){
-      CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-      Company company = (Company) appUserService.getUserByEmail(userDetails.getUsername());
-      
-      Offer offer = new Offer();
-      offer.setOfferingCompany(company);
-      offer.setOpen(true);
-      offer.setBusDescription(busDescription);
-      
-      offer.setDepartureCity(request.getDepartureCity());
-      offer.setArrivalCity(request.getArrivalCity());
-      
-      offer.setDepartureHour(request.getDepartureHour());
-      offer.setArrivalHour(request.getArrivalHour());
-      
-      offer.setStartDate(request.getStartDate());
-      offer.setEndDate(request.getStartDate());
-      
-      offer.setDesiredNumberOfSubscribers(request.getRequestingClients().size() + numberOfAdditionalPeople);
-      offer.setPrice(price);
-      offer.setSourceRequest(request);
-      
-      offerRepository.save(offer);
-      
-      request.setSuggestedOffer(offer);
-      request.setOpen(false);
-      requestRepository.save(request);
-      
+    if (request != null && request.isOpen()) {
+      createOfferFromRequest(request, numberOfAdditionalPeople, price, busDescription);
     }
     
     return "redirect:/company/my_offers";
+  }
+  
+  private void createOfferFromRequest(Request request,
+                                      int numberOfAdditionalPeople,
+                                      float price,
+                                      String busDescription) {
+    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
+    Company company = (Company) appUserService.getUserByEmail(userDetails.getUsername());
+    
+    Offer offer = new Offer();
+    offer.setOfferingCompany(company);
+    offer.setOpen(true);
+    offer.setBusDescription(busDescription);
+    
+    offer.setDepartureCity(request.getDepartureCity());
+    offer.setArrivalCity(request.getArrivalCity());
+    
+    offer.setDepartureHour(request.getDepartureHour());
+    offer.setArrivalHour(request.getArrivalHour());
+    
+    offer.setStartDate(request.getStartDate());
+    offer.setEndDate(request.getStartDate());
+    
+    offer.setDesiredNumberOfSubscribers(request.getRequestingClients().size() + numberOfAdditionalPeople);
+    offer.setPrice(price);
+    offer.setSourceRequest(request);
+    
+    offerRepository.save(offer);
+    
+    request.setSuggestedOffer(offer);
+    request.setOpen(false);
+    requestRepository.save(request);
   }
   
 }
