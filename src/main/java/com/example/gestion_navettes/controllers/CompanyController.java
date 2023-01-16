@@ -6,7 +6,6 @@ import com.example.gestion_navettes.entities.Request;
 import com.example.gestion_navettes.repositories.ICityRepository;
 import com.example.gestion_navettes.repositories.IOfferRepository;
 import com.example.gestion_navettes.repositories.IRequestRepository;
-import com.example.gestion_navettes.security.CustomUserDetails;
 import com.example.gestion_navettes.security.IAuthenticationFacade;
 import com.example.gestion_navettes.security.services.AppUserService;
 import com.example.gestion_navettes.services.ValidationService;
@@ -34,8 +33,7 @@ public class CompanyController {
   
   @GetMapping("/my_offers")
   public String getMyOffers(Model model) {
-    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-    Company company = (Company) appUserService.getUserByEmail(userDetails.getUsername());
+    Company company = (Company) authenticationFacade.getCurrentAuthenticatedUser();
     model.addAttribute("offers", offerRepository.findByOfferingCompany(company));
     
     return "my_offers";
@@ -72,8 +70,7 @@ public class CompanyController {
       return "/add_offer";
     }
     
-    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-    offer.setOfferingCompany((Company) appUserService.getUserByEmail(userDetails.getUsername()));
+    offer.setOfferingCompany((Company) authenticationFacade.getCurrentAuthenticatedUser());
     offerRepository.save(offer);
     
     return "redirect:/company/my_offers";
@@ -98,11 +95,9 @@ public class CompanyController {
                                       int numberOfAdditionalPeople,
                                       float price,
                                       String busDescription) {
-    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-    Company company = (Company) appUserService.getUserByEmail(userDetails.getUsername());
     
     Offer offer = new Offer();
-    offer.setOfferingCompany(company);
+    offer.setOfferingCompany((Company) authenticationFacade.getCurrentAuthenticatedUser());
     offer.setOpen(true);
     offer.setBusDescription(busDescription);
     

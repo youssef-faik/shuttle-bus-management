@@ -5,7 +5,6 @@ import com.example.gestion_navettes.entities.Company;
 import com.example.gestion_navettes.entities.Offer;
 import com.example.gestion_navettes.repositories.ICityRepository;
 import com.example.gestion_navettes.repositories.IOfferRepository;
-import com.example.gestion_navettes.security.CustomUserDetails;
 import com.example.gestion_navettes.security.IAuthenticationFacade;
 import com.example.gestion_navettes.security.entities.AppUser;
 import com.example.gestion_navettes.security.repositories.IAppRoleRepository;
@@ -69,7 +68,7 @@ public class MainController {
   }
   
   @GetMapping("/sign_up_company")
-  public String getSignUpCompnayPage(Model model) {
+  public String getSignUpCompanyPage(Model model) {
     model.addAttribute("company", new Company());
     
     return "sign_up_company";
@@ -77,8 +76,7 @@ public class MainController {
   
   @PostMapping("/login_success")
   public String getLoginSuccessPage() {
-    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-    AppUser appUser = appUserService.getUserByEmail(userDetails.getUsername());
+    AppUser appUser = authenticationFacade.getCurrentAuthenticatedUser();
     
     if (appUser.getRoles().contains(appRoleRepository.findAppRoleByName("client"))) {
       return "redirect:/client/my_subscriptions";

@@ -6,7 +6,6 @@ import com.example.gestion_navettes.entities.Request;
 import com.example.gestion_navettes.repositories.ICityRepository;
 import com.example.gestion_navettes.repositories.IOfferRepository;
 import com.example.gestion_navettes.repositories.IRequestRepository;
-import com.example.gestion_navettes.security.CustomUserDetails;
 import com.example.gestion_navettes.security.IAuthenticationFacade;
 import com.example.gestion_navettes.security.repositories.IAppUserRepository;
 import com.example.gestion_navettes.security.services.AppUserService;
@@ -37,19 +36,16 @@ public class ClientController {
   final ValidationService validationService;
   
   @GetMapping("/my_subscriptions")
-  public String getMySubscriptions(Model model){
-    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-    Client client = (Client) appUserService.getUserByEmail(userDetails.getUsername());
-    
+  public String getMySubscriptions(Model model) {
+    Client client = (Client) authenticationFacade.getCurrentAuthenticatedUser();
     model.addAttribute("subscriptions", offerRepository.findByClientsIs(client));
-  
+    
     return "my_subscriptions";
   }
   
   @GetMapping("/my_requests")
-  public String getMyRequests(Model model){
-    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-    Client client = (Client) appUserService.getUserByEmail(userDetails.getUsername());
+  public String getMyRequests(Model model) {
+    Client client = (Client) authenticationFacade.getCurrentAuthenticatedUser();
     model.addAttribute("requests", requestRepository.findByRequestingClientsEquals(client));
     model.addAttribute("offers", offerRepository.findAll());
     
@@ -57,7 +53,7 @@ public class ClientController {
   }
   
   @GetMapping("/add_request")
-  public String addSubscriptionRequest(Model model){
+  public String addSubscriptionRequest(Model model) {
     model.addAttribute("cities", cityRepository.findAll());
     model.addAttribute("request", new Request());
     
@@ -65,29 +61,27 @@ public class ClientController {
   }
   
   @PostMapping("/save_request")
-  public String saveOffer(@Valid Request request, BindingResult result, Model model){
+  public String saveOffer(@Valid Request request, BindingResult result, Model model) {
     List<ObjectError> errors = validationService.validateRequest(request);
-  
+    
     if (!errors.isEmpty()) {
       for (ObjectError error : errors) {
         result.addError(error);
       }
     }
-  
+    
     if (result.hasErrors()) {
       model.addAttribute("cities", cityRepository.findAll());
-    
+      
       return "/add_request";
     }
     
-    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-    Client client = (Client) appUserService.getUserByEmail(userDetails.getUsername());
-    
+    Client client = (Client) authenticationFacade.getCurrentAuthenticatedUser();
     Request matchingRequest = requestRepository.findByDepartureCityAndArrivalCity(
             request.getDepartureCity(),
             request.getArrivalCity());
     
-    if (matchingRequest != null) {
+    if (matchingRequest != null && matchingRequest.isOpen()) {
       if (!matchingRequest.getRequestingClients().contains(client)) {
         matchingRequest.getRequestingClients().add(client);
         requestRepository.save(matchingRequest);
@@ -103,12 +97,10 @@ public class ClientController {
   }
   
   @PostMapping("/subscribe/{id}")
-  public String subscribe(@PathVariable("id") Long offerId){
+  public String subscribe(@PathVariable("id") Long offerId) {
     Offer offer = offerRepository.findById(offerId).get();
+    Client client = (Client) authenticationFacade.getCurrentAuthenticatedUser();
     
-    CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
-    Client client = (Client) appUserService.getUserByEmail(userDetails.getUsername());
-  
     if (!offer.getClients().contains(client)
             && offer.getClients().size() < offer.getDesiredNumberOfSubscribers()) {
       offer.getClients().add(client);
@@ -118,5 +110,5 @@ public class ClientController {
     return "redirect:/client/my_subscriptions";
   }
   
- 
+  
 }
