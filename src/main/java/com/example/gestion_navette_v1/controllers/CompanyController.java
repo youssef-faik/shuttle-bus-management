@@ -87,7 +87,7 @@ public class CompanyController {
   ){
     Request request = requestRepository.findById(requestId).get();
     
-    if (request != null){
+    if (request != null && request.isOpen()){
       CustomUserDetails userDetails = authenticationFacade.getCustomUserDetails();
       Company company = (Company) appUserService.getUserByEmail(userDetails.getUsername());
       
