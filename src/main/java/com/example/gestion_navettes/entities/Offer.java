@@ -37,24 +37,31 @@ public class Offer {
   
   private boolean open;
   
+  @NotNull
   @OneToOne
   private Company offeringCompany;
   
+  @NotNull(message = "La ville de depart est obligatoire !")
   @OneToOne
   private City departureCity;
   
+  @NotNull(message = "La ville d'arrive est obligatoire !")
   @OneToOne
   private City arrivalCity;
   
+  @NotNull(message = "La date de debut est obligatoire !")
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date startDate;
   
+  @NotNull(message = "La date fin est obligatoire !")
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date endDate;
   
+  @NotNull(message = "L'heure de depart est obligatoire !")
   @DateTimeFormat(pattern = "HH:mm")
   private Date departureHour;
   
+  @NotNull(message = "L'heure d'arrive est obligatoire !")
   @DateTimeFormat(pattern = "HH:mm")
   private Date arrivalHour;
   
